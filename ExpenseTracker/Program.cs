@@ -1,10 +1,13 @@
 using ExpenseTracker.Components;
+using ExpenseTracker.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+builder.Services.AddHttpClient();
+builder.Services.AddSqlite<ExpenseContext>("Data Source=expenses.db");
 
 var app = builder.Build();
 
@@ -23,5 +26,11 @@ app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
+
+var scopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
+using (var scope = scopeFactory.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<ExpenseContext>();
+}
 
 app.Run();
