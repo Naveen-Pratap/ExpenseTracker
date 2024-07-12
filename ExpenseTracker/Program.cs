@@ -9,6 +9,11 @@ builder.Services.AddRazorComponents()
 builder.Services.AddHttpClient();
 builder.Services.AddSqlite<ExpenseContext>("Data Source=expenses.db");
 
+builder.Services.AddMvc(opt =>
+{
+    opt.EnableEndpointRouting = false;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -26,6 +31,8 @@ app.UseAntiforgery();
 
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode();
+
+app.UseMvcWithDefaultRoute();
 
 var scopeFactory = app.Services.GetRequiredService<IServiceScopeFactory>();
 using (var scope = scopeFactory.CreateScope())
