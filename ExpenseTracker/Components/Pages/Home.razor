@@ -4,23 +4,7 @@
 
 <PageTitle>Home</PageTitle>
 
-<div class="main">
-    <div class="heading">
-        <h1>Recent Expenses</h1>
-    </div>
-    <ul class="expense-cards">
-        @foreach (var expense in expenses)
-        {
-            <li>
-                <div class="expense-info">
-                    <span class="value">@expense.Value</span>
-                    <span class="description">>@expense.Description</span>
-                    <span class="created-time">@expense.CreatedTime</span>
-                </div>
-            </li>
-        }
-    </ul>
-</div>
+<ExpenseList expenses="expenses"/>
 
 @code {
     public List<Expense> expenses = new();

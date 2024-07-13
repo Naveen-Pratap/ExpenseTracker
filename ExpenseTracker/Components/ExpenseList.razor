@@ -1,0 +1,18 @@
+﻿<div class="main">
+    <div class="heading">
+        <h1>Recent Expenses</h1>
+    </div>
+    <ul class="expense-cards">
+        @foreach (var expense in expenses)
+        {
+            <li>
+                <ExpenseItem expense="expense"/>
+            </li>
+        }
+    </ul>
+</div>
+
+@code {
+    [Parameter]
+    public List<Expense> expenses { get; set; }
+}

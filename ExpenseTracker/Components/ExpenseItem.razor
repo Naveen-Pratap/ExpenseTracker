@@ -1,0 +1,10 @@
+﻿<div class="expense-info">
+    <span class="value">@expense.Value</span>
+    <span class="description">@expense.Description</span>
+    <span class="created-time">@expense.CreatedTime</span>
+</div>
+
+@code {
+    [Parameter]
+    public Expense expense { get; set; }
+}
