@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseTracker.Controllers
 {
-    [Route("expense")]
+    [Route("api/expense")]
     [ApiController]
     public class ExpenseController: Controller
     {
@@ -19,6 +19,17 @@ namespace ExpenseTracker.Controllers
         public async Task<ActionResult<List<Expense>>> GetExpenses()
         {
             return (await _db.Expenses.ToListAsync()).OrderByDescending(s => s.Id).ToList();
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<int>> AddExpense(Expense expense)
+        {
+            expense.CreatedTime = DateTime.Now;
+
+            _db.Expenses.Attach(expense);
+            await _db.SaveChangesAsync();
+
+            return expense.Id;
         }
     }
 }

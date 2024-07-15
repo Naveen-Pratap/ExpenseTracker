@@ -11,6 +11,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        expenses = await HttpClient.GetFromJsonAsync<List<Expense>>(NavigationManager.BaseUri + "expense") ?? new List<Expense>();
+        expenses = await HttpClient.GetFromJsonAsync<List<Expense>>(NavigationManager.BaseUri + "api/expense") ?? new List<Expense>();
     }
 }

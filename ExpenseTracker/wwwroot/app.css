@@ -54,8 +54,8 @@ h1:focus {
 custom
 */
 
-/* Main container */
-.main {
+/* Expenses container */
+.expenses-container {
     max-width: 100%;
     margin: 0 auto;
     padding: 20px;
@@ -68,7 +68,7 @@ custom
 .heading h1 {
     font-size: 32px;
     color: #333;
-    text-align: center;
+    text-align: left;
     margin-bottom: 20px;
 }
 
@@ -118,3 +118,28 @@ custom
     color: #999;
     margin-top: 5px;
 }
+
+.new-expense-button {
+    float: right;
+}
+
+.add-expense-form-container{
+    width: 70%;
+}
+
+.form-field {
+    display: flex;
+    margin: 0.5rem;
+}
+
+    .form-field > label {
+        width: 8rem;
+    }
+
+    .form-field > div {
+        flex-grow: 1;
+    }
+
+    .form-field input {
+        width: 100%;
+    }

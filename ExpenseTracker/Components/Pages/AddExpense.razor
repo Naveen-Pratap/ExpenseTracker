@@ -1,0 +1,70 @@
+﻿@page "/add-expense"
+@inject HttpClient Http
+@inject NavigationManager Navigation
+
+<div class="main">
+    <div class="add-expense-container">
+        <div class="heading">
+            <h1>Add Expenses</h1>
+        </div>
+        <EditForm Model="newExpense" OnValidSubmit="CreateExpenseEntry" FormName="AddExpenseForm"> 
+            <div class="add-expense-form-container">
+                <div class="form-field">
+                    <label>Value:</label>
+                    <div>
+                        <InputNumber id="value" class="form-control"  @bind-Value="newExpense!.Value" />
+                        <ValidationMessage For="@(() => newExpense.Value)" />
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label>Description:</label>
+                    <div>
+                        <InputText id="description" class="form-control"  @bind-Value="newExpense.Description" />
+                        <ValidationMessage For="@(() => newExpense.Description)" />
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label>Tag:</label>
+                    <div>
+                        <InputSelect id="tag" class="form-control" @bind-Value="newExpense.Tagid">
+                            <option value="">Select Tag</option>
+                            @foreach (var tag in expenseTags!)
+                            {
+                                <option value="@tag.Id">@tag.Name</option>
+                            }
+                        </InputSelect>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" type="submit">
+                Done
+            </button>
+            <DataAnnotationsValidator />
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    public Expense? newExpense { get; set; }
+    List<ExpenseTag>? expenseTags = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        newExpense = new();
+        expenseTags = await Http.GetFromJsonAsync<List<ExpenseTag>>(Navigation.BaseUri + "api/expensetags");
+    }
+
+    async Task CreateExpenseEntry()
+    {
+        newExpense!.Tag = expenseTags.FirstOrDefault(tag => tag.Id == newExpense.Tagid);
+        var resp = await Http.PostAsJsonAsync(Navigation.BaseUri + "api/expense", newExpense);
+        if (resp.IsSuccessStatusCode)
+        {
+            Navigation.NavigateTo("/");
+        }
+    }
+}
