@@ -25,4 +25,11 @@
     <_ContentIncludedByDefault Remove="Components\Pages\AddExpense.razor" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\css\fontawesome\webfonts\fa-brands-400.woff2" />
+    <None Include="wwwroot\css\fontawesome\webfonts\fa-regular-400.woff2" />
+    <None Include="wwwroot\css\fontawesome\webfonts\fa-solid-900.woff2" />
+    <None Include="wwwroot\css\fontawesome\webfonts\fa-v4compatibility.woff2" />
+  </ItemGroup>
+
 </Project>

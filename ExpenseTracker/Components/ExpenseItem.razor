@@ -1,10 +1,26 @@
-﻿<div class="expense-info">
-    <span class="value">@expense.Value</span>
-    <span class="description">@expense.Description</span>
-    <span class="created-time">@expense.CreatedTime</span>
+﻿@inject NavigationManager NavigationManager
+
+<div class="expense-info">
+    <div class="row">
+        <div class="expense-details col-lg-10 col-md-10">
+            <span class="value">@expense.Value</span>
+            <span class="description">@expense.Description</span>
+            <span class="created-time">@expense.CreatedTime</span>
+        </div>
+        <div class="expense-actions col-lg-2 col-md-2">
+            <i class="fa-solid fa-edit edit-icon" @onclick="@(() => EditExpense(expense.Id))"></i>
+            <i class="fa-solid fa-trash-alt delete-icon"></i>
+        </div>
+    </div>
+
 </div>
 
 @code {
     [Parameter]
     public Expense expense { get; set; }
+
+    private void EditExpense(int id)
+    {
+        NavigationManager.NavigateTo(NavigationManager.BaseUri + $"edit-expense/{id}");
+    }
 }

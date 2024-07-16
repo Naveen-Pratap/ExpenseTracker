@@ -143,3 +143,35 @@ custom
     .form-field input {
         width: 100%;
     }
+
+.expense-info {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    width: 100%
+}
+
+.expense-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.expense-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.edit-icon, .delete-icon {
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+}
+
+    .edit-icon:hover {
+        background-color: #e2e6ea;
+    }
+
+    .delete-icon:hover {
+        background-color: #f8d7da;
+    }

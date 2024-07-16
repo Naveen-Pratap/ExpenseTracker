@@ -1,0 +1,76 @@
+﻿@page "/edit-expense/{Id:int}"
+@inject HttpClient Http
+@inject NavigationManager Navigation
+
+<div class="main">
+    <div class="add-expense-container">
+        <div class="heading">
+            <h1>Edit Expense</h1>
+        </div>
+        <EditForm Model="expense" OnValidSubmit="UpdateExpenseEntry" FormName="EditExpenseForm">
+            <div class="edit-expense-form-container">
+                <div class="form-field">
+                    <label>Value:</label>
+                    <div>
+                        <InputNumber id="value" class="form-control" @bind-Value="expense!.Value" />
+                        <ValidationMessage For="@(() => expense.Value)" />
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label>Description:</label>
+                    <div>
+                        <InputText id="description" class="form-control" @bind-Value="expense.Description" />
+                        <ValidationMessage For="@(() => expense.Description)" />
+                    </div>
+                </div>
+
+                <div class="form-field">
+                    <label>Tag:</label>
+                    <div>
+                        <InputSelect id="tag" class="form-control" @bind-Value="expense.Tagid">
+                            <option value="">Select Tag</option>
+                            @foreach (var tag in expenseTags!)
+                            {
+                                <option value="@tag.Id">@tag.Name</option>
+                            }
+                        </InputSelect>
+                    </div>
+                </div>
+            </div>
+
+            <button class="btn btn-primary" type="submit">
+                Done
+            </button>
+            <DataAnnotationsValidator />
+        </EditForm>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int Id { get; set; }
+
+    public Expense? expense = new();
+    List<ExpenseTag>? expenseTags = new();
+
+    protected override async Task OnParametersSetAsync()
+    {
+        expense = await Http.GetFromJsonAsync<Expense>(Navigation.BaseUri + $"api/expense/{Id}");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        expenseTags = await Http.GetFromJsonAsync<List<ExpenseTag>>(Navigation.BaseUri + "api/expensetags");
+    }
+
+    async Task UpdateExpenseEntry()
+    {
+        expense!.Tag = expenseTags.FirstOrDefault(tag => tag.Id == expense.Tagid);
+        var resp = await Http.PutAsJsonAsync(Navigation.BaseUri + $"api/expense/{expense!.Id}", expense);
+        if (resp.IsSuccessStatusCode)
+        {
+            Navigation.NavigateTo("/");
+        }
+    }
+}
