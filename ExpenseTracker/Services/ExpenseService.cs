@@ -9,6 +9,7 @@ namespace ExpenseTracker.Services
         public event Action? RefreshRequested;
         private readonly HttpClient _httpClient;
         private readonly NavigationManager _navigationManager;
+        public bool LoadingExpenses = false;
     
         public ExpenseService(HttpClient httpClient, NavigationManager navigationManager)
         {
@@ -27,7 +28,9 @@ namespace ExpenseTracker.Services
 
         public async Task LoadExpensesAsync()
         {
+            LoadingExpenses = true;
             Expenses = await _httpClient.GetFromJsonAsync<List<Expense>>(_navigationManager.BaseUri + "api/expense");
+            LoadingExpenses = false;
             NotifyStateChanged();
         }
 

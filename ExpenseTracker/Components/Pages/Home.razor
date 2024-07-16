@@ -8,9 +8,16 @@
 
 <PageTitle>Home</PageTitle>
 
-@if (ExpenseService.Expenses == null)
+@if (ExpenseService.LoadingExpenses)
 {
-    <p><em>Loading...</em></p>
+    <div class="loader"></div>
+}
+else if (ExpenseService.Expenses.Count == 0)
+{
+    <div class="no-expenses-message">
+        <i class="fas fa-info-circle"></i>
+        <p>No expenses found. Click on <b>New Expense</b> to add a new expense.</p>
+    </div>
 }
 else
 {
