@@ -1,5 +1,6 @@
 using ExpenseTracker.Components;
 using ExpenseTracker.Data;
+using ExpenseTracker.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -8,6 +9,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddHttpClient();
 builder.Services.AddSqlite<ExpenseContext>("Data Source=expenses.db");
+builder.Services.AddScoped<ExpenseService>();
 
 builder.Services.AddMvc(opt =>
 {

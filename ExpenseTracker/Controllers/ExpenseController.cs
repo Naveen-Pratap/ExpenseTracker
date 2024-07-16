@@ -68,7 +68,23 @@ namespace ExpenseTracker.Controllers
             }
 
             return id;
-        } 
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<int>> DeleteExpense(int id)
+        {
+            Expense expense = await _db.Expenses.FindAsync(id);
+
+            if (expense == null)
+            {
+                return BadRequest();
+            }
+
+            _db.Expenses.Remove(expense);
+            await _db.SaveChangesAsync();
+
+            return id;
+        }
         
         private async Task<bool> ExpenseExists(int id)
         {

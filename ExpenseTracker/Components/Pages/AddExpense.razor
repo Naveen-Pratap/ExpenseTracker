@@ -1,6 +1,7 @@
 ﻿@page "/add-expense"
 @inject HttpClient Http
 @inject NavigationManager Navigation
+@inject ExpenseService ExpenseService
 
 <div class="main">
     <div class="add-expense-container">
@@ -61,10 +62,9 @@
     async Task CreateExpenseEntry()
     {
         newExpense!.Tag = expenseTags.FirstOrDefault(tag => tag.Id == newExpense.Tagid);
-        var resp = await Http.PostAsJsonAsync(Navigation.BaseUri + "api/expense", newExpense);
-        if (resp.IsSuccessStatusCode)
-        {
-            Navigation.NavigateTo("/");
-        }
+        await ExpenseService.AddExpenseAsync(newExpense);
+
+        Navigation.NavigateTo("/");
+
     }
 }

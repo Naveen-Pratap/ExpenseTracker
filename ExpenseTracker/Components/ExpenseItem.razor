@@ -1,4 +1,7 @@
-﻿@inject NavigationManager NavigationManager
+﻿@inject HttpClient Http
+@inject NavigationManager Navigation
+@using ExpenseTracker.Services
+@inject ExpenseService ExpenseService
 
 <div class="expense-info">
     <div class="row">
@@ -9,7 +12,7 @@
         </div>
         <div class="expense-actions col-lg-2 col-md-2">
             <i class="fa-solid fa-edit edit-icon" @onclick="@(() => EditExpense(expense.Id))"></i>
-            <i class="fa-solid fa-trash-alt delete-icon"></i>
+            <i class="fa-solid fa-trash-alt delete-icon" @onclick="@(() => DeleteExpense(expense.Id))"></i>
         </div>
     </div>
 
@@ -21,6 +24,13 @@
 
     private void EditExpense(int id)
     {
-        NavigationManager.NavigateTo(NavigationManager.BaseUri + $"edit-expense/{id}");
+        Navigation.NavigateTo(Navigation.BaseUri + $"edit-expense/{id}");
     }
+
+    private async Task DeleteExpense(int id)
+    {
+        await ExpenseService.DeleteExpenseAsync(id);
+    }
+
+
 }
