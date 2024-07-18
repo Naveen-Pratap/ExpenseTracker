@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using static System.Net.WebRequestMethods;
 
@@ -32,6 +33,13 @@ namespace ExpenseTracker.Services
             Expenses = await _httpClient.GetFromJsonAsync<List<Expense>>(_navigationManager.BaseUri + "api/expense");
             LoadingExpenses = false;
             NotifyStateChanged();
+        }
+
+        public async Task<Expense> GetExpenseByIdAsync(int id)
+        {
+            var expense = await _httpClient.GetFromJsonAsync<Expense>(_navigationManager.BaseUri + $"api/expense/{id}");
+            return expense;
+
         }
 
         public async Task DeleteExpenseAsync(int id)

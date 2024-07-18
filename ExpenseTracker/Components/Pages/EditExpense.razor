@@ -2,6 +2,7 @@
 @inject HttpClient Http
 @inject NavigationManager Navigation
 @inject ExpenseService ExpenseService
+@inject ExpenseTagService ExpenseTagService
 
 <div class="main">
     <div class="add-expense-container">
@@ -57,12 +58,13 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        expense = await Http.GetFromJsonAsync<Expense>(Navigation.BaseUri + $"api/expense/{Id}");
+        expense = await ExpenseService.GetExpenseByIdAsync(Id);
     }
 
     protected override async Task OnInitializedAsync()
     {
-        expenseTags = await Http.GetFromJsonAsync<List<ExpenseTag>>(Navigation.BaseUri + "api/expensetags");
+        await ExpenseTagService.LoadExpenseTagsAsync();
+        expenseTags = ExpenseTagService.ExpenseTags;
     }
 
     async Task UpdateExpenseEntry()

@@ -10,6 +10,7 @@ builder.Services.AddRazorComponents()
 builder.Services.AddHttpClient();
 builder.Services.AddSqlite<ExpenseContext>("Data Source=expenses.db");
 builder.Services.AddScoped<ExpenseService>();
+builder.Services.AddScoped<ExpenseTagService>();
 
 builder.Services.AddMvc(opt =>
 {
