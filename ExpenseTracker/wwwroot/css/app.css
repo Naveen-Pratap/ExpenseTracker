@@ -166,6 +166,7 @@ custom
     padding: 5px;
     border-radius: 5px;
     transition: background-color 0.2s;
+    height: 30px;
 }
 
     .edit-icon:hover {
