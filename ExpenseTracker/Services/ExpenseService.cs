@@ -11,21 +11,23 @@ namespace ExpenseTracker.Services
         private readonly HttpClient _httpClient;
         private readonly NavigationManager _navigationManager;
         public bool LoadingExpenses = false;
-    
+        public event Action OnChange;
+        public List<Expense> Expenses { get; set; }
+
         public ExpenseService(HttpClient httpClient, NavigationManager navigationManager)
         {
             _httpClient = httpClient;
             _navigationManager = navigationManager;
         }
 
-        public event Action OnChange;
+        
 
         private void NotifyStateChanged()
         {
             OnChange?.Invoke();
         }
 
-        public List<Expense> Expenses { get; set; }
+        
 
         public async Task LoadExpensesAsync()
         {

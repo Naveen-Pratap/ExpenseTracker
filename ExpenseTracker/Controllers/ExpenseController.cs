@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using ExpenseTracker.Repositories;
+using ExpenseTracker.Utils;
 
 namespace ExpenseTracker.Controllers
 {
@@ -9,55 +11,60 @@ namespace ExpenseTracker.Controllers
     [ApiController]
     public class ExpenseController : Controller
     {
-        private readonly ExpenseContext _db;
+        private readonly IExpenseRepository _expenseRepository;
+        private readonly IClock _clock;
 
-        public ExpenseController(ExpenseContext db)
+        public ExpenseController(IExpenseRepository expenseRepository, IClock clock)
         {
-            _db = db;
+            _expenseRepository = expenseRepository;
+            _clock = clock;
         }
+
 
         [HttpGet]
         public async Task<ActionResult<List<Expense>>> GetExpenses()
         {
-            return (await _db.Expenses.ToListAsync()).OrderByDescending(s => s.Id).ToList();
+            return (await _expenseRepository.GetAllAsync()).OrderByDescending(s => s.Id).ToList();
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Expense>> GetExpenseById(int id)
         {
             //TODO: Handle does not exist
-            return await _db.Expenses.Where(entity => entity.Id == id).FirstOrDefaultAsync();
+            return await _expenseRepository.GetExpenseByIdAsync(id);
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> AddExpense(Expense expense)
+        public async Task<ActionResult<Expense>> AddExpense(Expense expense)
         {
-            expense.CreatedTime = DateTime.Now;
+            expense.CreatedTime = _clock.GetLocalTimeNow();
+            
+            await _expenseRepository.AddExpenseAsync(expense);
 
-            _db.Expenses.Attach(expense);
-            await _db.SaveChangesAsync();
-
-            return expense.Id;
+            return expense;
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<int>> UpdateExpense(int id, Expense expense)
+        public async Task<ActionResult<Expense>> UpdateExpense(int id, Expense expense)
         {
             if (id != expense.Id)
             {
                 return BadRequest();
             }
 
-            _db.Entry(expense).State = EntityState.Modified;
+            if (await _expenseRepository.GetExpenseByIdAsync(id) == null)
+            {
+                return BadRequest();
+            }
 
             try
             {
-                await _db.SaveChangesAsync();
+                await _expenseRepository.UpdateExpenseAsync(expense);
             }
 
             catch (DbUpdateConcurrencyException)
             {
-                if (!await ExpenseExists(id))
+                if (await _expenseRepository.GetExpenseByIdAsync(id) == null)
                 {
                     return BadRequest();
                 }
@@ -67,28 +74,22 @@ namespace ExpenseTracker.Controllers
                 }
             }
 
-            return id;
+            return expense;
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult<int>> DeleteExpense(int id)
+        public async Task<ActionResult<Expense>> DeleteExpense(int id)
         {
-            Expense expense = await _db.Expenses.FindAsync(id);
+            Expense expense = await _expenseRepository.GetExpenseByIdAsync(id);
 
             if (expense == null)
             {
                 return BadRequest();
             }
 
-            _db.Expenses.Remove(expense);
-            await _db.SaveChangesAsync();
+            await _expenseRepository.DeleteExpenseAsync(expense);
 
-            return id;
-        }
-        
-        private async Task<bool> ExpenseExists(int id)
-        {
-            return await _db.Expenses.AnyAsync(e => e.Id == id);
+            return expense;
         }
 
     }

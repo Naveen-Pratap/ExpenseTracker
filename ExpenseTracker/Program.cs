@@ -1,6 +1,8 @@
 using ExpenseTracker.Components;
 using ExpenseTracker.Data;
+using ExpenseTracker.Repositories;
 using ExpenseTracker.Services;
+using ExpenseTracker.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,8 +11,11 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddHttpClient();
 builder.Services.AddSqlite<ExpenseContext>("Data Source=expenses.db");
+builder.Services.AddScoped<IExpenseRepository, ExpenseRepository>();
 builder.Services.AddScoped<ExpenseService>();
 builder.Services.AddScoped<ExpenseTagService>();
+builder.Services.AddScoped<IClock, Clock>();
+
 
 builder.Services.AddMvc(opt =>
 {

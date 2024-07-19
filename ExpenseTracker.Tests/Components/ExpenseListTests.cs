@@ -9,7 +9,7 @@ namespace ExpenseTracker.Tests.Components
     {
         [Fact]
         public void ExpenseList_DisplaysCorrectInfo()
-        {
+        {            
             var tag = new ExpenseTag
             {
                 Id = 1,
