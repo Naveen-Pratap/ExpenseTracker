@@ -7,8 +7,10 @@ namespace ExpenseTracker.Data
         public ExpenseContext(DbContextOptions options) : base(options)
         {
         }
-        public DbSet<Expense> Expenses { get; set; }
-        public DbSet<ExpenseTag> ExpenseTags { get; set; }
+
+        public ExpenseContext() { }
+        public virtual DbSet<Expense> Expenses { get; set; }
+        public virtual DbSet<ExpenseTag> ExpenseTags { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -26,7 +26,7 @@ namespace ExpenseTracker.Controllers
         public async Task<ActionResult<Expense>> GetExpenseById(int id)
         {
             //TODO: Handle does not exist
-            return (await _db.Expenses.FindAsync(id));
+            return await _db.Expenses.Where(entity => entity.Id == id).FirstOrDefaultAsync();
         }
 
         [HttpPost]
