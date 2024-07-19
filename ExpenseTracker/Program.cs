@@ -3,13 +3,15 @@ using ExpenseTracker.Data;
 using ExpenseTracker.Repositories;
 using ExpenseTracker.Services;
 using ExpenseTracker.Utils;
+using Microsoft.AspNetCore.Components;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
-builder.Services.AddHttpClient();
+builder.Services.AddScoped(sp =>
+    new HttpClient { BaseAddress = new Uri(builder.Configuration["FrontendUrl"] ?? "http://localhost:5100") });
 builder.Services.AddSqlite<ExpenseContext>("Data Source=expenses.db");
 builder.Services.AddScoped<IExpenseRepository, ExpenseRepository>();
 builder.Services.AddScoped<ExpenseService>();
