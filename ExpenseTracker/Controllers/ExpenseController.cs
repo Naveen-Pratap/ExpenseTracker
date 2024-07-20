@@ -31,7 +31,8 @@ namespace ExpenseTracker.Controllers
         public async Task<ActionResult<Expense>> GetExpenseById(int id)
         {
             //TODO: Handle does not exist
-            return await _expenseRepository.GetExpenseByIdAsync(id);
+            var expense = await _expenseRepository.GetExpenseByIdAsync(id);
+            return expense;
         }
 
         [HttpPost]
@@ -48,11 +49,6 @@ namespace ExpenseTracker.Controllers
         public async Task<ActionResult<Expense>> UpdateExpense(int id, Expense expense)
         {
             if (id != expense.Id)
-            {
-                return BadRequest();
-            }
-
-            if (await _expenseRepository.GetExpenseByIdAsync(id) == null)
             {
                 return BadRequest();
             }
