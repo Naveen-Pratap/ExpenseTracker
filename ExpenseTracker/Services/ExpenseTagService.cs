@@ -7,13 +7,11 @@ namespace ExpenseTracker.Services
     public class ExpenseTagService
     {
         private readonly HttpClient? _httpClient;
-        private readonly NavigationManager? _navigationManager;
         public bool LoadingExpenseTags { get; set; }
 
-        public ExpenseTagService(HttpClient? httpClient, NavigationManager? navigationManager)
+        public ExpenseTagService(HttpClient? httpClient)
         {
             _httpClient = httpClient;
-            _navigationManager = navigationManager;
             LoadingExpenseTags = false;
         }
 
@@ -22,7 +20,7 @@ namespace ExpenseTracker.Services
         public async Task LoadExpenseTagsAsync()
         {
             LoadingExpenseTags = true;
-            ExpenseTags = await _httpClient.GetFromJsonAsync<List<ExpenseTag>>(_navigationManager.BaseUri + "api/expensetags");
+            ExpenseTags = await _httpClient.GetFromJsonAsync<List<ExpenseTag>>("api/expensetags");
             LoadingExpenseTags = false;
         }
     }
