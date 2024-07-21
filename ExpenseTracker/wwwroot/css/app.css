@@ -239,4 +239,9 @@ custom
         margin: 10px 0;
         line-height: 1.5;
     }
+
+.error-container-img {
+    padding-bottom: 20px;
 }
+
+
