@@ -30,7 +30,7 @@ namespace ExpenseTracker.Services
 
 
         public async Task LoadExpensesAsync()
-        {
+        {   
             LoadingExpenses = true;
             Expenses = await _httpClient.GetFromJsonAsync<List<Expense>>("api/expense");
             LoadingExpenses = false;

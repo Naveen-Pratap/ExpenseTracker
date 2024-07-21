@@ -217,3 +217,26 @@ custom
     .no-expenses-message p {
         margin: 0;
     }
+
+.error-container {
+    border: 1px solid #e74c3c;
+    padding: 20px;
+    background-color: white;
+    color: black;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+}
+
+    .error-container h2 {
+        margin-top: 0;
+        color: #e74c3c;
+    }
+
+    .error-container p {
+        margin: 10px 0;
+        line-height: 1.5;
+    }
+}
