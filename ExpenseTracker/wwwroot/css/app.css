@@ -127,6 +127,10 @@ custom
     width: 70%;
 }
 
+.edit-expense-form-container {
+    width: 70%;
+}
+
 .form-field {
     display: flex;
     margin: 0.5rem;

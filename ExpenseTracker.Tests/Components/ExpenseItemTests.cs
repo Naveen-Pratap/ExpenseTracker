@@ -43,5 +43,42 @@ namespace ExpenseTracker.Tests.Components
             Assert.NotNull(deleteIconElem);
         }
 
+        [Fact]
+        public void ExpenseItem_EditButtonClickNavigatesCorrectly()
+        {
+            // Arrange
+            Expense expense = new Expense { Id = 1 };
+            var mockExpenseService = new Mock<IExpenseService>();
+            Services.AddSingleton<IExpenseService>(mockExpenseService.Object);
+
+            // Act
+            var cut = RenderComponent<ExpenseItem>(parameters => parameters.Add(p => p.expense, expense));
+            cut.Find(".edit-icon").Click();
+
+            var navMan = Services.GetRequiredService<FakeNavigationManager>();
+
+            // Assert
+            Assert.Equal($"http://localhost/edit-expense/{1}", navMan.Uri);
+        }
+
+        [Fact]
+        public void ExpenseItem_DeleteButtonClickCallsExpenseService()
+        {
+            // Arrange
+            Expense expense = new Expense { Id = 1 };
+            var mockExpenseService = new Mock<IExpenseService>();
+            mockExpenseService.Setup(x => x.DeleteExpenseAsync(1));
+            Services.AddSingleton<IExpenseService>(mockExpenseService.Object);
+
+            // Act
+            var cut = RenderComponent<ExpenseItem>(parameters => parameters.Add(p => p.expense, expense));
+            cut.Find(".delete-icon").Click();
+
+            var navMan = Services.GetRequiredService<FakeNavigationManager>();
+
+            // Assert
+            mockExpenseService.Verify(x => x.DeleteExpenseAsync(1), Times.Once());
+        }
+
     }
 }
