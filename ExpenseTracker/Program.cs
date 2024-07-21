@@ -14,8 +14,8 @@ builder.Services.AddScoped(sp =>
     new HttpClient { BaseAddress = new Uri(builder.Configuration["FrontendUrl"] ?? "http://localhost:5100") });
 builder.Services.AddSqlite<ExpenseContext>("Data Source=expenses.db");
 builder.Services.AddScoped<IExpenseRepository, ExpenseRepository>();
-builder.Services.AddScoped<ExpenseService>();
-builder.Services.AddScoped<ExpenseTagService>();
+builder.Services.AddScoped<IExpenseService, ExpenseService>();
+builder.Services.AddScoped<IExpenseTagService, ExpenseTagService>();
 builder.Services.AddScoped<IClock, Clock>();
 
 

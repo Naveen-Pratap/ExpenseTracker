@@ -1,8 +1,8 @@
 ﻿@page "/edit-expense/{Id:int}"
 @inject HttpClient Http
 @inject NavigationManager Navigation
-@inject ExpenseService ExpenseService
-@inject ExpenseTagService ExpenseTagService
+@inject IExpenseService ExpenseService
+@inject IExpenseTagService ExpenseTagService
 
 <div class="main">
     <div class="add-expense-container">

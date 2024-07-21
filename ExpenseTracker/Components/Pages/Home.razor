@@ -1,8 +1,7 @@
 ﻿@page "/"
 @inject HttpClient HttpClient
 @inject NavigationManager NavigationManager
-@using ExpenseTracker.Services
-@inject ExpenseService ExpenseService
+@inject IExpenseService ExpenseService
 
 @implements IDisposable
 

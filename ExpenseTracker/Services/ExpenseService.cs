@@ -5,28 +5,29 @@ using static System.Net.WebRequestMethods;
 
 namespace ExpenseTracker.Services
 {
-    public class ExpenseService
+    public class ExpenseService : IExpenseService
     {
         public event Action? RefreshRequested;
         private readonly HttpClient _httpClient;
-        public bool LoadingExpenses = false;
+        public bool LoadingExpenses { get; set; }
         public event Action OnChange;
         public List<Expense> Expenses { get; set; }
 
         public ExpenseService(HttpClient httpClient)
         {
             _httpClient = httpClient;
-            
+            LoadingExpenses = false;
+
         }
 
-        
+
 
         private void NotifyStateChanged()
         {
             OnChange?.Invoke();
         }
 
-        
+
 
         public async Task LoadExpensesAsync()
         {
@@ -50,7 +51,7 @@ namespace ExpenseTracker.Services
             {
                 await LoadExpensesAsync();
             }
-            
+
         }
 
         public async Task EditExpenseAsync(int id, Expense expense)

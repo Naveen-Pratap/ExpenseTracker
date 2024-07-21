@@ -4,7 +4,7 @@ using static System.Net.WebRequestMethods;
 
 namespace ExpenseTracker.Services
 {
-    public class ExpenseTagService
+    public class ExpenseTagService : IExpenseTagService
     {
         private readonly HttpClient? _httpClient;
         public bool LoadingExpenseTags { get; set; }

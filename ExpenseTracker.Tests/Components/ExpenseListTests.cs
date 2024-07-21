@@ -39,9 +39,11 @@ namespace ExpenseTracker.Tests.Components
             // Act
             var cut = RenderComponent<ExpenseList>(parameters => parameters.Add(p => p.expenses, new List<Expense>()));
 
-            // Assert
+            
             var headingElem = cut.Find(".heading");
             var cardsElem = cut.Find(".expense-cards");
+
+            // Assert
             Assert.NotNull(headingElem);
             Assert.NotNull(cardsElem);
 
@@ -62,8 +64,9 @@ namespace ExpenseTracker.Tests.Components
             // Act
             var cut = RenderComponent<ExpenseList>(parameters => parameters.Add(p => p.expenses, expenses));
 
-            // Assert
             var cardsElem = cut.Find(".expense-cards");
+
+            // Assert
             Assert.Equal(2, cardsElem.ChildElementCount);
         }
 
