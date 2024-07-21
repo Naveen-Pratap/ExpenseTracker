@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using ExpenseTracker.Components;
+using ExpenseTracker.Services;
+using RichardSzalay.MockHttp;
+using Bunit;
 
 namespace ExpenseTracker.Tests.Components
 {
@@ -8,33 +12,59 @@ namespace ExpenseTracker.Tests.Components
     public class ExpenseListsTests : TestContext
     {
         [Fact]
-        public void ExpenseList_DisplaysCorrectInfo()
-        {            
-            var tag = new ExpenseTag
-            {
-                Id = 1,
-                Name = "dummy"
-            };
-
+        public void ExpenseList_CallsChildComponentForEachExpense()
+        {
+            // Arrange
             var expenses = new List<Expense>
             {
-                new Expense { Id = 1, Value = 100, Description = "Expense 1", Tag = tag, CreatedTime = DateTime.Now },
-                new Expense { Id = 2, Value = 200, Description = "Expense 2", Tag = tag, CreatedTime = DateTime.Now }
+                new Expense(),
+                new Expense()
             };
 
+            ComponentFactories.AddStub<ExpenseItem>();
+
+            // Act
             var cut = RenderComponent<ExpenseList>(parameters => parameters.Add(p => p.expenses, expenses));
 
-            for (var i = 0; i < expenses.Count; i++)
+            // Assert
+            Assert.Equal(2, cut.FindComponents<Stub<ExpenseItem>>().Count);            
+        }
+
+        [Fact]
+        public void ExpenseList_HasHeadingAndExpenseCards()
+        {
+            // Arrange
+            ComponentFactories.AddStub<ExpenseItem>();
+
+            // Act
+            var cut = RenderComponent<ExpenseList>(parameters => parameters.Add(p => p.expenses, new List<Expense>()));
+
+            // Assert
+            var headingElem = cut.Find(".heading");
+            var cardsElem = cut.Find(".expense-cards");
+            Assert.NotNull(headingElem);
+            Assert.NotNull(cardsElem);
+
+        }
+
+        [Fact]
+        public void ExpenseList_ExpenseCardsLoadsWithEachExpense()
+        {
+            // Arrange
+            var expenses = new List<Expense>
             {
-                var valueElem = cut.FindAll(".value")[i];
-                var descriptionElem = cut.FindAll(".description")[i];
-                var createdTimeElem = cut.FindAll(".created-time")[i];
+                new Expense(),
+                new Expense()
+            };
 
-                Assert.Equal(expenses[i].Value.ToString(), valueElem.TextContent.Trim());
-                Assert.Equal(expenses[i].Description.ToString(), descriptionElem.TextContent.Trim());
-                Assert.Equal(expenses[i].CreatedTime.ToString(), createdTimeElem.TextContent.Trim());
-            }
+            ComponentFactories.AddStub<ExpenseItem>();
 
+            // Act
+            var cut = RenderComponent<ExpenseList>(parameters => parameters.Add(p => p.expenses, expenses));
+
+            // Assert
+            var cardsElem = cut.Find(".expense-cards");
+            Assert.Equal(2, cardsElem.ChildElementCount);
         }
 
     }
