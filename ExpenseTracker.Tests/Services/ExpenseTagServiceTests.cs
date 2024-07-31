@@ -31,5 +31,23 @@ namespace ExpenseTracker.Tests.Services
             Assert.Single(expenseTagService.ExpenseTags);
             Assert.Equal(1, expenseTagService.ExpenseTags[0].Id);
         }
+
+        [Fact]
+        public async Task LoadExpenseTagsAsync_ThrowsHttpException()
+        {
+            // Arrange
+            var mockHttp = new MockHttpMessageHandler();
+            mockHttp.When("http://localhost/api/expensetags").Throw(new HttpRequestException());
+            var client = new HttpClient(mockHttp);
+            client.BaseAddress = new Uri("http://localhost");
+            var expenseTagService = new ExpenseTagService(client);
+
+            // Act
+            Func<Task> action = async () => await expenseTagService.LoadExpenseTagsAsync();
+
+            // Assert
+            await Assert.ThrowsAsync<HttpRequestException>(action);
+
+        }
     }
 }

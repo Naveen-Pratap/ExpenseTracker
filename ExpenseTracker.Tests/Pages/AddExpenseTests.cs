@@ -77,9 +77,9 @@ namespace ExpenseTracker.Tests.Pages
             inputElemTag.Change(1);
 
             // Assert
-            Assert.Equal(200, cut!.Instance!.newExpense!.Value);
-            Assert.Equal("Dummy description", cut!.Instance!.newExpense!.Description);
-            Assert.Equal(1, cut!.Instance!.newExpense!.Tagid);
+            Assert.Equal(200, cut!.Instance!.NewExpense!.Value);
+            Assert.Equal("Dummy description", cut!.Instance!.NewExpense!.Description);
+            Assert.Equal(1, cut!.Instance!.NewExpense!.Tagid);
 
 
         }

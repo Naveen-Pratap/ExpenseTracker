@@ -1,9 +1,4 @@
-﻿using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using static System.Net.WebRequestMethods;
-
-namespace ExpenseTracker.Services
+﻿namespace ExpenseTracker.Services
 {
     public class ExpenseService : IExpenseService
     {
@@ -20,23 +15,19 @@ namespace ExpenseTracker.Services
 
         }
 
-
-
         private void NotifyStateChanged()
         {
             OnChange?.Invoke();
         }
 
-
-
         public async Task LoadExpensesAsync()
-        {   
+        {
+            
             LoadingExpenses = true;
             Expenses = await _httpClient.GetFromJsonAsync<List<Expense>>("api/expense");
             LoadingExpenses = false;
             NotifyStateChanged();
         }
-
         public async Task<Expense> GetExpenseByIdAsync(int id)
         {
             var expense = await _httpClient.GetFromJsonAsync<Expense>($"api/expense/{id}");

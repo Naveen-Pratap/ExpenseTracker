@@ -8,30 +8,30 @@
         <div class="heading">
             <h1>Add Expenses</h1>
         </div>
-        <EditForm Model="newExpense" OnValidSubmit="CreateExpenseEntry" FormName="AddExpenseForm"> 
+        <EditForm Model="NewExpense" OnValidSubmit="CreateExpenseEntry" FormName="AddExpenseForm"> 
             <div class="add-expense-form-container">
                 <div class="form-field">
                     <label>Value:</label>
                     <div>
-                        <InputNumber id="value" class="form-control"  @bind-Value="newExpense!.Value" />
-                        <ValidationMessage For="@(() => newExpense.Value)" />
+                        <InputNumber id="value" class="form-control"  @bind-Value="NewExpense!.Value" />
+                        <ValidationMessage For="@(() => NewExpense.Value)" />
                     </div>
                 </div>
 
                 <div class="form-field">
                     <label>Description:</label>
                     <div>
-                        <InputText id="description" class="form-control"  @bind-Value="newExpense.Description" />
-                        <ValidationMessage For="@(() => newExpense.Description)" />
+                        <InputText id="description" class="form-control"  @bind-Value="NewExpense.Description" />
+                        <ValidationMessage For="@(() => NewExpense.Description)" />
                     </div>
                 </div>
 
                 <div class="form-field">
                     <label>Tag:</label>
                     <div>
-                        <InputSelect id="tag" class="form-control" @bind-Value="newExpense.Tagid">
+                        <InputSelect id="tag" class="form-control" @bind-Value="NewExpense.Tagid">
                             <option value="">Select Tag</option>
-                            @foreach (var tag in expenseTags!)
+                            @foreach (var tag in ExpenseTags!)
                             {
                                 <option value="@tag.Id">@tag.Name</option>
                             }
@@ -50,20 +50,38 @@
 
 @code {
     [SupplyParameterFromForm]
-    public Expense? newExpense { get; set; }
-    List<ExpenseTag>? expenseTags = new();
+    public Expense? NewExpense { get; set; }
+    List<ExpenseTag>? ExpenseTags = new();
+    public bool Error = false;
+    public string ErrorMessage = "An unknown error occured.";
+
 
     protected override async Task OnInitializedAsync()
     {
-        newExpense = new();
-        await ExpenseTagService.LoadExpenseTagsAsync();
-        expenseTags = ExpenseTagService.ExpenseTags;
+        NewExpense = new();
+        try
+        {
+            await ExpenseTagService.LoadExpenseTagsAsync();
+        }
+        catch (HttpRequestException)
+        {
+            Error = true;
+            ErrorMessage = "We're unable to fetch the data at the moment. Please try again after some time.";
+        }
+        catch (Exception)
+        {
+            Error = true;
+            ErrorMessage = "An unknown error occured.";
+
+        }
+
+        ExpenseTags = ExpenseTagService.ExpenseTags;
     }
 
     async Task CreateExpenseEntry()
     {
-        newExpense!.Tag = expenseTags.FirstOrDefault(tag => tag.Id == newExpense.Tagid);
-        await ExpenseService.AddExpenseAsync(newExpense);
+        NewExpense!.Tag = ExpenseTags.FirstOrDefault(tag => tag.Id == NewExpense.Tagid);
+        await ExpenseService.AddExpenseAsync(NewExpense);
 
         Navigation.NavigateTo("/");
 

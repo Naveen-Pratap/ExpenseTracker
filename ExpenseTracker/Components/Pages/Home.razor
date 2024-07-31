@@ -5,10 +5,15 @@
 
 <PageTitle>Home</PageTitle>
 
-@if (ExpenseService.LoadingExpenses)
+@if (Error)
+{
+    <h2>@ErrorMessage</h2>
+}
+else if (ExpenseService.LoadingExpenses)
 {
     <div class="loader"></div>
 }
+
 else if (ExpenseService.Expenses.Count == 0)
 {
     <div class="no-expenses-message">
@@ -23,12 +28,30 @@ else
 
 
 @code {
-    public List<Expense> expenses = new();
+    public List<Expense> Expenses = new();
+    public bool Error = false;
+    public string ErrorMessage = "An unknown error occured.";
 
     protected override async Task OnInitializedAsync()
     {
         ExpenseService.OnChange += StateHasChanged;
-        await ExpenseService.LoadExpensesAsync();
+        try
+        {
+            await ExpenseService.LoadExpensesAsync();
+        }
+        catch (HttpRequestException)
+        {
+            Error = true;
+            ErrorMessage = "We're unable to fetch the data at the moment. Please try again after some time.";
+        }
+        catch (Exception)
+        {
+            Error = true;
+            ErrorMessage = "An unknown error occured.";
+
+        }
+
+    
     }
 
     public void Dispose()

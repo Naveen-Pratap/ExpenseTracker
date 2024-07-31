@@ -37,6 +37,24 @@ namespace ExpenseTracker.Tests.Services
         }
 
         [Fact]
+        public async Task LoadExpensesAsync_ThrowsHttpException()
+        {
+            // Arrange
+            var mockHttp = new MockHttpMessageHandler();
+            mockHttp.When("http://localhost/api/expense").Throw(new HttpRequestException());
+            var client = new HttpClient(mockHttp);
+            client.BaseAddress = new Uri("http://localhost");
+            var expenseService = new ExpenseService(client);
+
+            // Act
+            Func<Task> action = async () => await expenseService.LoadExpensesAsync();
+
+            // Assert
+            await Assert.ThrowsAsync<HttpRequestException>(action);
+
+        }
+
+        [Fact]
         public async Task GetExpenseByIdAsync_ReturnsCorrectValue()
         {
             // Arrange
