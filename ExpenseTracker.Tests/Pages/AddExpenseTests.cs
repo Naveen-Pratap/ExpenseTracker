@@ -144,5 +144,49 @@ namespace ExpenseTracker.Tests.Pages
             Assert.NotNull(headingElem);
 
         }
+
+        [Fact]
+        public void AddExpense_ShowsErrorMessageWhenTagsServiceRaiseHttpRequestException()
+        {
+            // Arrange
+            var mockExpenseService = new Mock<IExpenseService>();
+            Services.AddSingleton<IExpenseService>(mockExpenseService.Object);
+
+            var mockExpenseTagService = new Mock<IExpenseTagService>();
+            mockExpenseTagService.Setup(x => x.LoadExpenseTagsAsync()).Throws<HttpRequestException>();
+            Services.AddSingleton<IExpenseTagService>(mockExpenseTagService.Object);
+
+            // Act
+            var cut = RenderComponent<AddExpense>();
+
+            var errorElem = cut.Find(".error-message-simple");
+
+            // Assert
+            Assert.NotNull(errorElem);
+            Assert.True(cut.Instance.Error);
+            Assert.NotEmpty(cut.Instance.ErrorMessage);
+        }
+
+        [Fact]
+        public void AddExpense_ShowsErrorMessageWhenTagsServiceRaisetException()
+        {
+            // Arrange
+            var mockExpenseService = new Mock<IExpenseService>();
+            Services.AddSingleton<IExpenseService>(mockExpenseService.Object);
+
+            var mockExpenseTagService = new Mock<IExpenseTagService>();
+            mockExpenseTagService.Setup(x => x.LoadExpenseTagsAsync()).Throws<Exception>();
+            Services.AddSingleton<IExpenseTagService>(mockExpenseTagService.Object);
+
+            // Act
+            var cut = RenderComponent<AddExpense>();
+
+            var errorElem = cut.Find(".error-message-simple");
+
+            // Assert
+            Assert.NotNull(errorElem);
+            Assert.True(cut.Instance.Error);
+            Assert.NotEmpty(cut.Instance.ErrorMessage);
+        }
     }
 }

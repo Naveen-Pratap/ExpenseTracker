@@ -244,4 +244,8 @@ custom
     padding-bottom: 20px;
 }
 
+.error-message-simple {
+    color: red;
+}
+
 

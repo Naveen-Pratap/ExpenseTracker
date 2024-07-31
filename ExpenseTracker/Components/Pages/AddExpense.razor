@@ -45,6 +45,10 @@
             </button>
             <DataAnnotationsValidator />
         </EditForm>
+        @if (Error)
+        {
+            <span class="error-message-simple">@ErrorMessage</span>
+        }
     </div>
 </div>
 
@@ -62,6 +66,7 @@
         try
         {
             await ExpenseTagService.LoadExpenseTagsAsync();
+            throw new HttpRequestException();
         }
         catch (HttpRequestException)
         {
@@ -71,19 +76,36 @@
         catch (Exception)
         {
             Error = true;
-            ErrorMessage = "An unknown error occured.";
+            ErrorMessage = "An unknown error occured. Please try again later";
 
         }
 
-        ExpenseTags = ExpenseTagService.ExpenseTags;
+        ExpenseTags = ExpenseTagService.ExpenseTags ?? new List<ExpenseTag>();
     }
 
     async Task CreateExpenseEntry()
     {
         NewExpense!.Tag = ExpenseTags.FirstOrDefault(tag => tag.Id == NewExpense.Tagid);
-        await ExpenseService.AddExpenseAsync(NewExpense);
+        try
+        {
+            await ExpenseService.AddExpenseAsync(NewExpense);
+        }
 
-        Navigation.NavigateTo("/");
+        catch (HttpRequestException)
+        {
+            Error = true;
+            ErrorMessage = "We're unable to update the expense at the moment. Please try again after some time.";
+        }
+        catch (Exception)
+        {
+            Error = true;
+            ErrorMessage = "An unknown error occured. Please try again later";
 
+        }
+
+        if (!Error)
+        {
+            Navigation.NavigateTo("/");
+        }     
     }
 }
