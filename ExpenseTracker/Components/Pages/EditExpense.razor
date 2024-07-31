@@ -8,30 +8,30 @@
         <div class="heading">
             <h1>Edit Expense</h1>
         </div>
-        <EditForm Model="expense" OnValidSubmit="UpdateExpenseEntry" FormName="EditExpenseForm">
+        <EditForm Model="Expense" OnValidSubmit="UpdateExpenseEntry" FormName="EditExpenseForm">
             <div class="edit-expense-form-container">
                 <div class="form-field">
                     <label>Value:</label>
                     <div>
-                        <InputNumber id="value" class="form-control" @bind-Value="expense!.Value" />
-                        <ValidationMessage For="@(() => expense.Value)" />
+                        <InputNumber id="value" class="form-control" @bind-Value="Expense!.Value" />
+                        <ValidationMessage For="@(() => Expense.Value)" />
                     </div>
                 </div>
 
                 <div class="form-field">
                     <label>Description:</label>
                     <div>
-                        <InputText id="description" class="form-control" @bind-Value="expense.Description" />
-                        <ValidationMessage For="@(() => expense.Description)" />
+                        <InputText id="description" class="form-control" @bind-Value="Expense.Description" />
+                        <ValidationMessage For="@(() => Expense.Description)" />
                     </div>
                 </div>
 
                 <div class="form-field">
                     <label>Tag:</label>
                     <div>
-                        <InputSelect id="tag" class="form-control" @bind-Value="expense.Tagid">
+                        <InputSelect id="tag" class="form-control" @bind-Value="Expense.Tagid">
                             <option value="">Select Tag</option>
-                            @foreach (var tag in expenseTags!)
+                            @foreach (var tag in ExpenseTags!)
                             {
                                 <option value="@tag.Id">@tag.Name</option>
                             }
@@ -45,6 +45,10 @@
             </button>
             <DataAnnotationsValidator />
         </EditForm>
+        @if (Error)
+        {
+            <span class="error-message-simple">@ErrorMessage</span>
+        }
     </div>
 </div>
 
@@ -52,26 +56,75 @@
     [Parameter]
     public int Id { get; set; }
 
-    public Expense? expense = new();
-    List<ExpenseTag>? expenseTags = new();
+    public Expense? Expense = new();
+    List<ExpenseTag>? ExpenseTags = new();
+    public bool Error = false;
+    public string ErrorMessage = "An unknown error occured.";
 
     protected override async Task OnParametersSetAsync()
     {
-        expense = await ExpenseService.GetExpenseByIdAsync(Id);
+        try
+        {
+            Expense = await ExpenseService.GetExpenseByIdAsync(Id);
+        }
+        catch (HttpRequestException)
+        {
+            Error = true;
+            ErrorMessage = "We couldn't find the id you are looking for. Are you sure you have the right id?";
+        }
+        catch (Exception)
+        {
+            Error = true;
+            ErrorMessage = "An unknown error occured. Please try again later";
+
+        }
     }
 
     protected override async Task OnInitializedAsync()
     {
-        await ExpenseTagService.LoadExpenseTagsAsync();
-        expenseTags = ExpenseTagService.ExpenseTags;
+        try
+        {
+            await ExpenseTagService.LoadExpenseTagsAsync();
+        }
+
+        catch (HttpRequestException)
+        {
+            Error = true;
+            ErrorMessage = "We're unable to fetch the data at the moment. Please try again after some time.";
+        }
+        catch (Exception)
+        {
+            Error = true;
+            ErrorMessage = "An unknown error occured. Please try again later";
+
+        }
+
+        ExpenseTags = ExpenseTagService.ExpenseTags ?? new();
     }
 
     async Task UpdateExpenseEntry()
     {
-        expense!.Tag = expenseTags.FirstOrDefault(tag => tag.Id == expense.Tagid);
-        await ExpenseService.EditExpenseAsync(Id, expense);
+        Expense!.Tag = ExpenseTags.FirstOrDefault(tag => tag.Id == Expense.Tagid);
+        try
+        {
+            await ExpenseService.EditExpenseAsync(Id, Expense);
+        }
 
-        Navigation.NavigateTo("/");
+        catch (HttpRequestException)
+        {
+            Error = true;
+            ErrorMessage = "We're unable to update the expense at the moment. Please try again after some time.";
+        }
+        catch (Exception)
+        {
+            Error = true;
+            ErrorMessage = "An unknown error occured. Please try again later";
+        }
+
+        if (!Error)
+        {
+            Navigation.NavigateTo("/");
+        }
 
     }
 }

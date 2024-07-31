@@ -188,5 +188,77 @@ namespace ExpenseTracker.Tests.Pages
             Assert.True(cut.Instance.Error);
             Assert.NotEmpty(cut.Instance.ErrorMessage);
         }
+
+        [Fact]
+        public void AddExpense_ShowsErrorMessageWhenExpenseServiceRaiseHttpRequestException()
+        {
+            // Arrange
+            var expenseTags = new List<ExpenseTag>
+            {
+                new ExpenseTag {Id = 1, Name= "dummy1"},
+            };
+            var mockExpenseService = new Mock<IExpenseService>();
+            mockExpenseService.Setup(x => x.AddExpenseAsync(It.IsAny<Expense>())).Throws<HttpRequestException>();
+            Services.AddSingleton<IExpenseService>(mockExpenseService.Object);
+
+            var mockExpenseTagService = new Mock<IExpenseTagService>();
+            mockExpenseTagService.SetupGet(x => x.ExpenseTags).Returns(expenseTags);
+            Services.AddSingleton<IExpenseTagService>(mockExpenseTagService.Object);
+
+            // Act
+            var cut = RenderComponent<AddExpense>();
+            var inputElemValue = cut.Find("#value");
+            inputElemValue.Change("200");
+
+            var inputElemDescription = cut.Find("#description");
+            inputElemDescription.Change("Dummy description");
+
+            var inputElemTag = cut.Find("#tag");
+            inputElemTag.Change(1);
+            cut.Find(".btn").Click();
+
+            var errorElem = cut.Find(".error-message-simple");
+
+            // Assert
+            Assert.NotNull(errorElem);
+            Assert.True(cut.Instance.Error);
+            Assert.NotEmpty(cut.Instance.ErrorMessage);
+        }
+
+        [Fact]
+        public void AddExpense_ShowsErrorMessageWhenExpenseServiceRaiseException()
+        {
+            // Arrange
+            var expenseTags = new List<ExpenseTag>
+            {
+                new ExpenseTag {Id = 1, Name= "dummy1"},
+            };
+            var mockExpenseService = new Mock<IExpenseService>();
+            mockExpenseService.Setup(x => x.AddExpenseAsync(It.IsAny<Expense>())).Throws<Exception>();
+            Services.AddSingleton<IExpenseService>(mockExpenseService.Object);
+
+            var mockExpenseTagService = new Mock<IExpenseTagService>();
+            mockExpenseTagService.SetupGet(x => x.ExpenseTags).Returns(expenseTags);
+            Services.AddSingleton<IExpenseTagService>(mockExpenseTagService.Object);
+
+            // Act
+            var cut = RenderComponent<AddExpense>();
+            var inputElemValue = cut.Find("#value");
+            inputElemValue.Change("200");
+
+            var inputElemDescription = cut.Find("#description");
+            inputElemDescription.Change("Dummy description");
+
+            var inputElemTag = cut.Find("#tag");
+            inputElemTag.Change(1);
+            cut.Find(".btn").Click();
+
+            var errorElem = cut.Find(".error-message-simple");
+
+            // Assert
+            Assert.NotNull(errorElem);
+            Assert.True(cut.Instance.Error);
+            Assert.NotEmpty(cut.Instance.ErrorMessage);
+        }
     }
 }
