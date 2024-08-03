@@ -1,16 +1,14 @@
-﻿using System;
-using System.Net.Http;
-using ExpenseTracker.Components;
+﻿using ExpenseTracker.Components;
 using ExpenseTracker.Services;
 using Moq;
-using RichardSzalay.MockHttp;
+using System;
 
 namespace ExpenseTracker.Tests.Components
 {
 
     public class ExpenseItemTests : TestContext
     {
-        
+
         [Fact]
         public void ExpenseItem_DisplaysCorrectInfo()
         {
@@ -28,7 +26,7 @@ namespace ExpenseTracker.Tests.Components
 
             // Act
             var cut = RenderComponent<ExpenseItem>(parameters => parameters.Add(p => p.expense, expense));
-            
+
             var valueElem = cut.Find(".value");
             var descriptionElem = cut.Find(".description");
             var createdTimeElem = cut.Find(".created-time");

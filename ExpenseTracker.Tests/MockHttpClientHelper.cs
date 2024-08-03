@@ -1,14 +1,18 @@
-﻿using System;
+﻿using Moq;
+using Moq.Protected;
+using System;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Threading;
 using System.Threading.Tasks;
-using Moq;
-using Moq.Protected;
 
 namespace ExpenseTracker.Tests;
 
+/// <summary>
+/// Mock http client helper for mocking in unit tests. 
+/// ultimately I decided to go for RichardSzalay.MockHttp
+/// </summary>
 public static class MockHttpClientHelper
 {
     public static HttpClient CreateMockHttpClient<T>(T responseObject, Uri baseUri)

@@ -1,11 +1,8 @@
 ﻿using ExpenseTracker.Services;
 using RichardSzalay.MockHttp;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ExpenseTracker.Tests.Services
@@ -131,7 +128,7 @@ namespace ExpenseTracker.Tests.Services
                     .Respond("application/json", "[{\"id\":1,\"value\":1,\"description\":\"eggs-new\",\"tag\":null,\"tagid\":2,\"createdTime\":\"2024-07-20T01:20:24.8326019\"}]");
 
             var client = new HttpClient(mockHttp);
-            Expense expense = new Expense { Id=1, Value=1, Description="eggs-new"};
+            Expense expense = new Expense { Id = 1, Value = 1, Description = "eggs-new" };
             client.BaseAddress = new Uri("http://localhost");
             var expenseService = new ExpenseService(client);
 

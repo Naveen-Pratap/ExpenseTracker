@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ExpenseTracker.Controllers;
-using Moq;
-using Moq.EntityFrameworkCore;
-
-using ExpenseTracker.Data;
+﻿using ExpenseTracker.Controllers;
 using ExpenseTracker.Repositories;
 using ExpenseTracker.Utils;
 using Microsoft.AspNetCore.Mvc;
+using Moq;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace ExpenseTracker.Tests.Controllers
 {
@@ -70,7 +65,7 @@ namespace ExpenseTracker.Tests.Controllers
 
             // Act
             var result = await controller.AddExpense(expense);
-            
+
             // Verify
             mockExpenseRepository.Verify(x => x.AddExpenseAsync(expense), Times.Once());
             Assert.IsType<Expense>(result.Value);
@@ -120,7 +115,7 @@ namespace ExpenseTracker.Tests.Controllers
             var mockExpenseRepository = new Mock<IExpenseRepository>();
             var mockClock = new Mock<IClock>();
             var controller = new ExpenseController(mockExpenseRepository.Object, mockClock.Object);
-            mockExpenseRepository.Setup(x => x.GetExpenseByIdAsync(1)).ReturnsAsync((Expense) null);
+            mockExpenseRepository.Setup(x => x.GetExpenseByIdAsync(1)).ReturnsAsync((Expense)null);
 
             // Act
             var result = await controller.UpdateExpense(1, new Expense());
@@ -136,7 +131,7 @@ namespace ExpenseTracker.Tests.Controllers
             // Arrange
             var mockExpenseRepository = new Mock<IExpenseRepository>();
             var mockClock = new Mock<IClock>();
-            Expense expense = new Expense { Id =1, Description = "dummy" };
+            Expense expense = new Expense { Id = 1, Description = "dummy" };
             var controller = new ExpenseController(mockExpenseRepository.Object, mockClock.Object);
             mockExpenseRepository.Setup(x => x.GetExpenseByIdAsync(1)).ReturnsAsync(new Expense());
             mockExpenseRepository.Setup(x => x.UpdateExpenseAsync(expense)).ReturnsAsync(expense);

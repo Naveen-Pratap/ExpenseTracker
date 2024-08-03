@@ -1,6 +1,9 @@
 ﻿
 namespace ExpenseTracker.Services
 {
+    /// <summary>
+    /// Interface for Expense service.
+    /// </summary>
     public interface IExpenseService
     {
         List<Expense> Expenses { get; set; }

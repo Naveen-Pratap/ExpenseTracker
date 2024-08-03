@@ -1,14 +1,17 @@
-﻿using ExpenseTracker.Data;
+﻿using ExpenseTracker.Repositories;
+using ExpenseTracker.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
-using ExpenseTracker.Repositories;
-using ExpenseTracker.Utils;
 
 namespace ExpenseTracker.Controllers
 {
     [Route("api/expense")]
     [ApiController]
+
+    /// <summary>
+    /// Controller for expense apis
+    /// </summary>
     public class ExpenseController : Controller
     {
         private readonly IExpenseRepository _expenseRepository;
@@ -39,7 +42,7 @@ namespace ExpenseTracker.Controllers
         public async Task<ActionResult<Expense>> AddExpense(Expense expense)
         {
             expense.CreatedTime = _clock.GetLocalTimeNow();
-            
+
             await _expenseRepository.AddExpenseAsync(expense);
 
             return expense;

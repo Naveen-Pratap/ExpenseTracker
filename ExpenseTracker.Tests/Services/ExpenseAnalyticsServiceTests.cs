@@ -1,14 +1,8 @@
-﻿using ExpenseTracker.Controllers;
-using ExpenseTracker.Repositories;
+﻿using ExpenseTracker.Repositories;
 using ExpenseTracker.Services;
-using ExpenseTracker.Utils;
 using Moq;
-using RichardSzalay.MockHttp;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ExpenseTracker.Tests.Services

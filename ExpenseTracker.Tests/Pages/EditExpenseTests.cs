@@ -5,12 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ExpenseTracker.Tests.Pages
 {
-    public class EditExpenseTests: TestContext
+    public class EditExpenseTests : TestContext
     {
         [Fact]
         public void EditExpense_HasHeading()
@@ -38,7 +36,7 @@ namespace ExpenseTracker.Tests.Pages
         public void EditExpense_ExpenseLoadedCorrectlyOnParameterSet()
         {
             // Arrange
-            Expense expense = new Expense { Id=1};
+            Expense expense = new Expense { Id = 1 };
             var mockExpenseService = new Mock<IExpenseService>();
             Services.AddSingleton<IExpenseService>(mockExpenseService.Object);
             mockExpenseService.Setup(x => x.GetExpenseByIdAsync(1)).ReturnsAsync(expense);
@@ -275,8 +273,8 @@ namespace ExpenseTracker.Tests.Pages
             Assert.NotNull(errorElem);
             Assert.True(cut.Instance.Error);
             Assert.NotEmpty(cut.Instance.ErrorMessage);
-        }  
-        
+        }
+
         [Fact]
         public void EditExpense_ShowsErrorMessageWheEditExpenseAsyncRaiseException()
         {

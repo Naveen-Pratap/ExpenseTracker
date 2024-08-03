@@ -1,6 +1,9 @@
 ﻿
 namespace ExpenseTracker.Repositories
 {
+    /// <summary>
+    /// Repository interface to be used for all database operations.
+    /// </summary>
     public interface IExpenseRepository
     {
         Task<Expense> AddExpenseAsync(Expense expense);

@@ -1,10 +1,6 @@
-﻿using System;
+﻿using ExpenseTracker.Components;
 using System.Collections.Generic;
-using System.Net.Http;
-using ExpenseTracker.Components;
-using ExpenseTracker.Services;
-using RichardSzalay.MockHttp;
-using Bunit;
+
 
 namespace ExpenseTracker.Tests.Components
 {
@@ -27,7 +23,7 @@ namespace ExpenseTracker.Tests.Components
             var cut = RenderComponent<ExpenseList>(parameters => parameters.Add(p => p.expenses, expenses));
 
             // Assert
-            Assert.Equal(2, cut.FindComponents<Stub<ExpenseItem>>().Count);            
+            Assert.Equal(2, cut.FindComponents<Stub<ExpenseItem>>().Count);
         }
 
         [Fact]
@@ -39,7 +35,7 @@ namespace ExpenseTracker.Tests.Components
             // Act
             var cut = RenderComponent<ExpenseList>(parameters => parameters.Add(p => p.expenses, new List<Expense>()));
 
-            
+
             var headingElem = cut.Find(".heading");
             var cardsElem = cut.Find(".expense-cards");
 

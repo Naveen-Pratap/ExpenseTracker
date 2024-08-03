@@ -3,6 +3,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ExpenseTracker.Repositories
 {
+    /// <summary>
+    /// Repository class for Expense, use this as an abstraction for the database.
+    /// </summary>
     public class ExpenseRepository : IExpenseRepository
     {
         private readonly ExpenseContext _context;

@@ -2,6 +2,9 @@
 
 namespace ExpenseTracker.Data
 {
+    /// <summary>
+    /// EF core dbcontext for Expenses.
+    /// </summary>
     public class ExpenseContext : DbContext
     {
         public ExpenseContext(DbContextOptions options) : base(options)

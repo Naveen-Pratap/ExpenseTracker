@@ -1,16 +1,10 @@
-﻿using System;
+﻿using ExpenseTracker.Components.Pages;
+using ExpenseTracker.Services;
+using Moq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
-using System.Net.Http.Json;
-using System.Text;
-using System.Threading.Tasks;
-using ExpenseTracker.Components.Pages;
-using Microsoft.AspNetCore.Components;
-using Moq;
-using ExpenseTracker.Tests;
-using ExpenseTracker.Services;
-using ExpenseTracker.Components;
 
 namespace ExpenseTracker.Tests.Pages
 {
@@ -32,7 +26,7 @@ namespace ExpenseTracker.Tests.Pages
             var mockExpenseTagService = new Mock<IExpenseTagService>();
             mockExpenseTagService.SetupGet(x => x.ExpenseTags).Returns(expenseTags);
             Services.AddSingleton<IExpenseTagService>(mockExpenseTagService.Object);
-            
+
             // Act
             var cut = RenderComponent<AddExpense>();
 
@@ -41,7 +35,7 @@ namespace ExpenseTracker.Tests.Pages
             // +1 for default option - <option value="""">Select Tag</option>
             Assert.Equal(tagElem.ChildNodes.Length, expenseTags.Count() + 1);
 
-            for (var i=0; i < expenseTags.Count(); i++)
+            for (var i = 0; i < expenseTags.Count(); i++)
             {
                 Assert.Equal(tagElem.ChildNodes[i + 1].TextContent, expenseTags[i].Name);
             }
@@ -58,11 +52,11 @@ namespace ExpenseTracker.Tests.Pages
             };
             var mockExpenseService = new Mock<IExpenseService>();
             Services.AddSingleton<IExpenseService>(mockExpenseService.Object);
-            
+
             var mockExpenseTagService = new Mock<IExpenseTagService>();
             mockExpenseTagService.SetupGet(x => x.ExpenseTags).Returns(expenseTags);
             Services.AddSingleton<IExpenseTagService>(mockExpenseTagService.Object);
-            
+
 
             // Act
             var cut = RenderComponent<AddExpense>();
@@ -72,7 +66,7 @@ namespace ExpenseTracker.Tests.Pages
 
             var inputElemDescription = cut.Find("#description");
             inputElemDescription.Change("Dummy description");
-            
+
             var inputElemTag = cut.Find("#tag");
             inputElemTag.Change(1);
 

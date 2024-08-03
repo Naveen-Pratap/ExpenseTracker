@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.Components;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using static System.Net.WebRequestMethods;
-
-namespace ExpenseTracker.Services
+﻿namespace ExpenseTracker.Services
 {
+    /// <summary>
+    /// Service for handling tags related business logic.
+    /// </summary>
     public class ExpenseTagService : IExpenseTagService
     {
         private readonly HttpClient? _httpClient;
@@ -17,6 +16,11 @@ namespace ExpenseTracker.Services
 
         public List<ExpenseTag> ExpenseTags { get; set; }
 
+        /// <summary>
+        /// Loads Tags into ExpenseTags. LoadingExpenseTags can be used by ui components for
+        /// displaying loader etc.
+        /// </summary>
+        /// <returns></returns>
         public async Task LoadExpenseTagsAsync()
         {
             LoadingExpenseTags = true;

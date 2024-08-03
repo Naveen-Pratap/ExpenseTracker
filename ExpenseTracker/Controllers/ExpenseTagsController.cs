@@ -1,12 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using ExpenseTracker.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using ExpenseTracker.Data;
 
 namespace ExpenseTracker.Controllers
 {
     [Route("api/expensetags")]
     [ApiController]
+    /// <summary>
+    /// Controller for Expense Tags related apis.
+    /// </summary>
     public class ExpenseTagsController : Controller
     {
         private readonly ExpenseContext _db;
@@ -15,7 +17,7 @@ namespace ExpenseTracker.Controllers
 
         public async Task<ActionResult<List<ExpenseTag>>> GetExpenseTags()
         {
-            var expenseTags = await(_db.ExpenseTags.ToListAsync());
+            var expenseTags = await (_db.ExpenseTags.ToListAsync());
             return Ok(expenseTags);
         }
     }
