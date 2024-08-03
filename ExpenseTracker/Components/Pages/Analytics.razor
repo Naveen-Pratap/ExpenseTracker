@@ -1,0 +1,118 @@
+﻿@page "/analytics"
+@inject IExpenseAnalyticsService ExpenseAnalyticsService
+@inject IClock Clock
+
+<div class="container analytics-container">
+    @if (Error)
+    {
+        <h2 class="error-message-simple">@ErrorMessage</h2>
+    }
+    else if (Dataset.Count == 0)
+    {
+        <h2 class="error-message-simple">No data to display</h2>
+    }
+    else
+    {
+        <div class="heading">
+            <h1>Total Expense for past @StartDateDaysBefore days: @TotalExpense</h1>
+        </div>
+        <div class="chart-view">
+            <div class="row">
+                <div class="col-lg-6 col-sm-12">
+                    <Chart @ref="pieChart" Type="ChartType.Pie" TItem="int" Options="@chartOptions" />
+                </div>
+            </div>
+             <div class="row col-lg-2 col-sm-4 justify-content-center">
+                 <div class="chart-reload-button">
+                    <Button Color="Color.Primary" Outline Clicked="@(async () => await HandleRedraw( pieChart, GetPieChartDataset ))">Redraw</Button>
+                 </div>           
+            </div>
+        </div>
+    }
+</div>
+
+
+@code {
+    public bool Error = false;
+    public string ErrorMessage = "We couldn't fetch the data you're looking for. Please try again later.";
+    private int StartDateDaysBefore { get; set; } = 7;
+
+    private Chart<int> pieChart;
+    ChartOptions chartOptions = new() { AspectRatio = 1.5 };
+
+    private List<int> Dataset { get; set; } = new();
+    private List<string> Labels { get; set; } = new();
+    private int TotalExpense { get; set; }
+
+    // private string[] Labels = { "Red", "Blue", "Yellow", "Green", "Purple", "Orange" };
+    private List<string> backgroundColors = new() { ChartColor.FromRgba(255, 99, 132, 0.2f), ChartColor.FromRgba(54, 162, 235, 0.2f), ChartColor.FromRgba(255, 206, 86, 0.2f), ChartColor.FromRgba(75, 192, 192, 0.2f), ChartColor.FromRgba(153, 102, 255, 0.2f), ChartColor.FromRgba(255, 159, 64, 0.2f) };
+    private List<string> borderColors = new() { ChartColor.FromRgba(255, 99, 132, 1f), ChartColor.FromRgba(54, 162, 235, 1f), ChartColor.FromRgba(255, 206, 86, 1f), ChartColor.FromRgba(75, 192, 192, 1f), ChartColor.FromRgba(153, 102, 255, 1f), ChartColor.FromRgba(255, 159, 64, 1f) };
+
+    private bool isAlreadyInitialised;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var StartDate = Clock.GetLocalTimeNow().AddDays(-(StartDateDaysBefore));
+        try
+        {
+            await LoadExpenseAnalyticsDataAndLabelsAsync(StartDate);
+        }
+        catch (Exception ex)
+        {
+            Error = true;
+        }
+
+        try
+        {
+            TotalExpense = await ExpenseAnalyticsService.GetTotalExpenseAsync(StartDate);
+        }
+        catch (Exception ex)
+        {
+            Error = true;
+        }
+
+    }
+
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!isAlreadyInitialised)
+        {
+            isAlreadyInitialised = true;
+
+            await HandleRedraw(pieChart, GetPieChartDataset);
+        }
+    }
+
+    private async Task HandleRedraw<TDataSet, TItem, TOptions, TModel>(Blazorise.Charts.BaseChart<TDataSet, TItem, TOptions, TModel> chart, Func<TDataSet> getDataSet)
+    where TDataSet : ChartDataset<TItem>
+    where TOptions : ChartOptions
+    where TModel : ChartModel
+    {
+        await chart.Clear();
+
+        await chart.AddLabelsDatasetsAndUpdate(Labels, getDataSet());
+    }
+
+    private int pieLabel;
+
+
+    private async Task LoadExpenseAnalyticsDataAndLabelsAsync(DateTime startDate)
+    {
+        var tagExpenseMap = await ExpenseAnalyticsService.GetTotalExpenseByTagAsync(startDate);
+        Labels = tagExpenseMap.Keys.ToList();
+        Dataset = tagExpenseMap.Values.ToList();
+    }
+
+    private PieChartDataset<int> GetPieChartDataset()
+    {
+        return new()
+            {
+                Label = "Expenses for last 1 week",
+                Data = Dataset,
+                BackgroundColor = backgroundColors,
+                BorderColor = borderColors,
+                BorderWidth = 1
+            };
+    }
+}

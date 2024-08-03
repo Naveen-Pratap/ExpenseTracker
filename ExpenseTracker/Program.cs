@@ -3,6 +3,9 @@ using ExpenseTracker.Data;
 using ExpenseTracker.Repositories;
 using ExpenseTracker.Services;
 using ExpenseTracker.Utils;
+using Blazorise;
+using Blazorise.Bootstrap5;
+using Blazorise.Icons.FontAwesome;
 using Microsoft.AspNetCore.Components;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,7 +19,15 @@ builder.Services.AddSqlite<ExpenseContext>("Data Source=expenses.db");
 builder.Services.AddScoped<IExpenseRepository, ExpenseRepository>();
 builder.Services.AddScoped<IExpenseService, ExpenseService>();
 builder.Services.AddScoped<IExpenseTagService, ExpenseTagService>();
+builder.Services.AddScoped<IExpenseAnalyticsService, ExpenseAnalyticsService>();
 builder.Services.AddScoped<IClock, Clock>();
+builder.Services
+    .AddBlazorise(options =>
+    {
+        options.Immediate = true;
+    })
+    .AddBootstrap5Providers()
+    .AddFontAwesomeIcons();
 
 
 builder.Services.AddMvc(opt =>

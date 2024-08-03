@@ -18,5 +18,14 @@ namespace ExpenseTracker.Services
 
             return TagTotalExpenseMap;
         }
+
+        public async Task<int> GetTotalExpenseAsync(DateTime startDate)
+        {
+
+            var expensesAfterStartDate = (await _expenseRepository.GetAllAsync()).ToList().Where(e => e.CreatedTime >= startDate);
+            var totalExpense = expensesAfterStartDate.Sum(e => e.Value);
+
+            return totalExpense;
+        }
     }
 }
