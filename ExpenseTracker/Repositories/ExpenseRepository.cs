@@ -14,12 +14,12 @@ namespace ExpenseTracker.Repositories
 
         public async Task<List<Expense>> GetAllAsync()
         {
-            return await _context.Expenses.ToListAsync();
+            return await _context.Expenses.Include(entity => entity.Tag).ToListAsync();
         }
 
         public async Task<Expense> GetExpenseByIdAsync(int id)
         {
-            return await _context.Expenses.FirstOrDefaultAsync(entity => entity.Id == id);
+            return await _context.Expenses.Include(entity => entity.Tag).FirstOrDefaultAsync(entity => entity.Id == id);
         }
 
         public async Task<Expense> AddExpenseAsync(Expense expense)
